@@ -157,8 +157,13 @@ const FormPage = ({ onSubmitSuccess }) => {
   return (
     <div className="container col-6 p-4">
       <div
-        className=" p-4 rounded "
-        style={{ backgroundColor: "#FFBFC9" }}
+        className="p-4 rounded border"
+        style={{
+          backgroundColor: "#FFFFFF",
+          borderColor: "#FFBFC9",
+          borderWidth: "1px",
+          borderStyle: "solid",
+        }}
       >
         <h2 className="mb-4 text-center">Unique Care Register</h2>
         <form onSubmit={handleSubmit}>

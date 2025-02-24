@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import FormPage from "./frompage"; // ตรวจสอบว่าชื่อไฟล์ถูกต้อง
+import FormPageMB from "./frompageMB";
 import CompletePage from "./complete"; // ตรวจสอบว่าชื่อไฟล์ถูกต้อง
 import banner_pc from "../img/Banner_PC.jpg";
 import banner_mb from "../img/Banner_MB.png";
@@ -53,7 +54,7 @@ const Dashboard = () => {
               onClick={() =>
                 window.open("https://uniquecarestation.com/", "_blank")
               }
-               onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Scale effect on hover
+              onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Scale effect on hover
               onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset scale on hover out
             >
               เว็บไซต์หลัก
@@ -86,8 +87,14 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <div className="flex-grow-1">
-        {!isFormSubmitted ? (
-          <FormPage onSubmitSuccess={() => setIsFormSubmitted(true)} /> // ส่งฟังก์ชันไปให้ FormPage
+        {isMobile ? (
+          !isFormSubmitted ? (
+            <FormPageMB onSubmitSuccess={() => setIsFormSubmitted(true)} />
+          ) : (
+            <CompletePage />
+          )
+        ) : !isFormSubmitted ? (
+          <FormPage onSubmitSuccess={() => setIsFormSubmitted(true)} />
         ) : (
           <CompletePage />
         )}

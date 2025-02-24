@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import api from "../api";
 
-const FormPage = ({ onSubmitSuccess }) => {
+const FormPageMB = ({ onSubmitSuccess }) => {
   // รับ prop เข้ามา
   const [formData, setFormData] = useState({
     firstname: "",
@@ -155,7 +155,7 @@ const FormPage = ({ onSubmitSuccess }) => {
   };
 
   return (
-    <div className="container col-6 p-4">
+    <div className="container  p-4">
       <div
         className=" p-4 rounded "
         style={{ backgroundColor: "#FFBFC9" }}
@@ -283,4 +283,4 @@ const FormPage = ({ onSubmitSuccess }) => {
   );
 };
 
-export default FormPage;
+export default FormPageMB;

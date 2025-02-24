@@ -19,7 +19,7 @@ const FormPage = ({ onSubmitSuccess }) => {
     password: "",
     confirmPassword: "",
   });
-  
+
   const validateEmail = (email) => {
     // ตรวจสอบรูปแบบอีเมล และอนุญาตเฉพาะ .com, .net, .org, .edu, .gov ฯลฯ
     const emailRegex =
@@ -51,7 +51,10 @@ const FormPage = ({ onSubmitSuccess }) => {
         }
 
         if (name === "password" || name === "confirmPassword") {
-          if (newData.password !== newData.confirmPassword) {
+          if (
+            newData.password !== newData.confirmPassword &&
+            newData.confirmPassword !== ""
+          ) {
             newErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน";
           } else {
             newErrors.confirmPassword = "";
@@ -152,9 +155,12 @@ const FormPage = ({ onSubmitSuccess }) => {
   };
 
   return (
-    <div className="p-2">
-      <div className="container mt-5 p-4 border border-secondary rounded">
-        <h2 className="mb-4 text-center">สมัครสมาชิก</h2>
+    <div className="container p-4">
+      <div
+        className=" p-4 border border-secondary rounded "
+        style={{ backgroundColor: "#FFDAE1" }}
+      >
+        <h2 className="mb-4 text-center">Unique Care Register</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">ชื่อ</label>
@@ -257,13 +263,20 @@ const FormPage = ({ onSubmitSuccess }) => {
               <option value="other">อื่น ๆ</option>
             </select>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={!isFormValid}
-          >
-            ส่งข้อมูล
-          </button>
+          <div className="d-flex justify-content-center">
+            <button
+              type="submit"
+              className="btn"
+              style={{
+                backgroundColor: "#FF1493", // สีชมพูเข้ม (DeepPink)
+                color: "white", // เปลี่ยนตัวอักษรเป็นสีขาว
+                border: "none", // เอาขอบออก
+              }}
+              disabled={!isFormValid}
+            >
+              ส่งข้อมูล
+            </button>
+          </div>
         </form>
       </div>
     </div>

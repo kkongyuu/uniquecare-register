@@ -9,7 +9,7 @@ const CompletePage = () => {
   return (
     <div>
       {/* Thank You Message */}
-      <div className="container text-center mt-5">
+      <div className="text-center mt-5 p-4">
         <h1 className="text-success">Registration Complete!</h1>
         <p>Your registration has been successfully completed.</p>
         <p>Your information has been recorded and will be used within the application.</p>

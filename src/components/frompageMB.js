@@ -4,6 +4,8 @@ import api from "../api";
 
 const FormPageMB = ({ onSubmitSuccess }) => {
   // รับ prop เข้ามา
+  const [modelshowtrue, setModelshowtrue] = useState(false);
+  const [modelshowfalse, setModelshowfalse] = useState(false);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -25,6 +27,14 @@ const FormPageMB = ({ onSubmitSuccess }) => {
     const emailRegex =
       /^[^\s@]+@[^\s@]+\.(com|net|org|edu|gov|info|co\.th|ac\.th)$/;
     return emailRegex.test(email);
+  };
+
+  const handleDuplicateEmail = () => {
+    setModelshowfalse(false);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      email: "อีเมลนี้ถูกใช้งานไปแล้ว กรุณาใช้อีเมลอื่น",
+    }));
   };
 
   const isFormValid =
@@ -72,6 +82,11 @@ const FormPageMB = ({ onSubmitSuccess }) => {
     }
   }, []);
 
+  const hundlesuccess = () => {
+    setModelshowfalse(false);
+    onSubmitSuccess();
+  };
+
   const validatePasswords = (name, value) => {
     setErrors((prevErrors) => {
       let newErrors = { ...prevErrors };
@@ -98,26 +113,15 @@ const FormPageMB = ({ onSubmitSuccess }) => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (errors.password || errors.confirmPassword) {
-      console.error("กรุณาแก้ไขข้อผิดพลาดก่อนส่งฟอร์ม");
-      return;
-    }
-
-    console.log("Submitted Data:", formData);
-    onSubmitSuccess(); // เรียกฟังก์ชันเพื่อเปลี่ยนไปที่ CompletePage
-  };
-
   const setDataRegister = async () => {
+    const { confirmPassword, ...dataToSubmit } = formData;
     try {
       // Validate form data
       if (
-        !formData.firstname ||
-        !formData.lastname ||
-        !formData.email ||
-        !formData.password
+        !dataToSubmit.firstname ||
+        !dataToSubmit.lastname ||
+        !dataToSubmit.email ||
+        !dataToSubmit.password
       ) {
         console.error("Please fill in all required fields");
         return;
@@ -125,7 +129,7 @@ const FormPageMB = ({ onSubmitSuccess }) => {
 
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
+      if (!emailRegex.test(dataToSubmit.email)) {
         console.error("Invalid email format");
         return;
       }
@@ -133,7 +137,7 @@ const FormPageMB = ({ onSubmitSuccess }) => {
       // Password strength check (at least 8 characters, 1 number, 1 special character)
       const passwordRegex =
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-      if (!passwordRegex.test(formData.password)) {
+      if (!passwordRegex.test(dataToSubmit.password)) {
         console.error(
           "Password must be at least 8 characters long and contain a number and a special character"
         );
@@ -141,10 +145,21 @@ const FormPageMB = ({ onSubmitSuccess }) => {
       }
 
       // Send data to API
-      const response = await api.post("/users/register", formData);
+      const response = await api.post("/users/register", dataToSubmit);
+      const message = response.data.message;
+      const status = response.data.status;
+
+      if (
+        message === "สมัครสมาชิกสำเร็จกรุณายืนยันอีเมลเข้าใช้งาน" &&
+        status === true
+      ) {
+        setModelshowtrue(true);
+      } else if (message === "อีเมลนี้ถูกใช้ไปแล้ว" && status === false) {
+        setModelshowfalse(true);
+      }
 
       if (response.status === 200) {
-        onSubmitSuccess(); // เรียกฟังก์ชันเพื่อเปลี่ยนไปที่ CompletePage
+        console.log("response data: ", response);
         console.log("Registration successful");
       } else {
         console.error("Registration failed");
@@ -152,6 +167,18 @@ const FormPageMB = ({ onSubmitSuccess }) => {
     } catch (error) {
       console.error("Error during registration:", error);
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (errors.password || errors.confirmPassword) {
+      console.error("กรุณาแก้ไขข้อผิดพลาดก่อนส่งฟอร์ม");
+      return;
+    }
+    const { confirmPassword, ...dataToSubmit } = formData;
+    console.log("Submitted Data:", dataToSubmit);
+    await setDataRegister();
   };
 
   return (
@@ -283,6 +310,84 @@ const FormPageMB = ({ onSubmitSuccess }) => {
             </button>
           </div>
         </form>
+      </div>
+      
+      <div
+        className={`modal fade ${modelshowtrue ? "show d-block" : ""}`}
+        tabIndex="-1"
+        role="dialog"
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      >
+        <div
+          className="modal-dialog modal-dialog-centered"
+          role="document"
+          style={{ width: "90%" }}
+        >
+          <div className="modal-content text-center p-4 rounded-3 shadow-lg">
+            {/* ไอคอนสำเร็จ */}
+            <div className="d-flex justify-content-center mb-3">
+              <i
+                className="fa fa-check-circle text-success"
+                style={{ fontSize: "60px" }}
+              ></i>
+            </div>
+
+            {/* หัวข้อ */}
+            <h5 className="fw-bold text-success">สมัครสมาชิกสำเร็จ!</h5>
+
+            {/* ข้อความแจ้งเตือน */}
+            <p className="text-secondary mt-2">
+              กรุณายืนยันอีเมลของคุณเพื่อเข้าใช้งาน
+            </p>
+
+            {/* ปุ่มปิด */}
+            <button
+              className="btn btn-success mt-3 px-4 py-2 rounded-pill shadow-lg"
+              onClick={hundlesuccess}
+            >
+              ตกลง
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`modal fade ${modelshowfalse ? "show d-block" : ""}`}
+        tabIndex="-1"
+        role="dialog"
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      >
+        <div
+          className="modal-dialog modal-dialog-centered"
+          role="document"
+          style={{ width: "90%" }}
+        >
+          <div className="modal-content text-center p-4 rounded-3 shadow-lg">
+            {/* ไอคอนล้มเหลว */}
+            <div className="d-flex justify-content-center mb-3">
+              <i
+                className="fa fa-x-circle text-danger"
+                style={{ fontSize: "60px" }}
+              ></i>
+            </div>
+
+            {/* หัวข้อ */}
+            <h5 className="fw-bold text-danger">สมัครสมาชิกไม่สำเร็จ!</h5>
+
+            {/* ข้อความแจ้งเตือน */}
+            <p className="text-secondary mt-2">
+              อีเมลนี้ถูกใช้งานไปแล้ว กรุณาใช้อีเมลอื่น
+            </p>
+
+            {/* ปุ่มปิด */}
+            <button
+              className="btn btn-danger mt-3 px-4 py-2 rounded-pill shadow-lg"
+              onClick={handleDuplicateEmail}
+            >
+              ปิด
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

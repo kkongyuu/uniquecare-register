@@ -3,9 +3,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import api from "../api";
 
 const FormPageMB = ({ onSubmitSuccess }) => {
-  // รับ prop เข้ามา
   const [modelshowtrue, setModelshowtrue] = useState(false);
   const [modelshowfalse, setModelshowfalse] = useState(false);
+  const [Loading, setDataloading] = useState(false);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -31,6 +31,7 @@ const FormPageMB = ({ onSubmitSuccess }) => {
 
   const handleDuplicateEmail = () => {
     setModelshowfalse(false);
+    setDataloading(false);
     setErrors((prevErrors) => ({
       ...prevErrors,
       email: "อีเมลนี้ถูกใช้งานไปแล้ว กรุณาใช้อีเมลอื่น",
@@ -84,6 +85,7 @@ const FormPageMB = ({ onSubmitSuccess }) => {
 
   const hundlesuccess = () => {
     setModelshowfalse(false);
+    setDataloading(false);
     onSubmitSuccess();
   };
 
@@ -165,6 +167,7 @@ const FormPageMB = ({ onSubmitSuccess }) => {
         console.error("Registration failed");
       }
     } catch (error) {
+      setDataloading(false);
       console.error("Error during registration:", error);
     }
   };
@@ -178,9 +181,9 @@ const FormPageMB = ({ onSubmitSuccess }) => {
     }
     const { confirmPassword, ...dataToSubmit } = formData;
     console.log("Submitted Data:", dataToSubmit);
+    setDataloading(true);
     await setDataRegister();
   };
-
   return (
     <div className="container  p-4">
       <div

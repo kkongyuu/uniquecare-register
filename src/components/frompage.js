@@ -157,8 +157,7 @@ const FormPage = ({ onSubmitSuccess }) => {
       ) {
         setModelshowtrue(true);
       } else if (message === "อีเมลนี้ถูกใช้ไปแล้ว" && status === false) {
-        // setModelshowfalse(true);
-        setModelshowtrue(true);
+        setModelshowfalse(true);
       }
 
       if (response.status === 200) {

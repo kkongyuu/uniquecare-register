@@ -5,6 +5,7 @@ import api from "../api";
 const FormPage = ({ onSubmitSuccess }) => {
   const [modelshowtrue, setModelshowtrue] = useState(false);
   const [modelshowfalse, setModelshowfalse] = useState(false);
+  const [Loading, setDataloading] = useState(false);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -30,6 +31,7 @@ const FormPage = ({ onSubmitSuccess }) => {
 
   const handleDuplicateEmail = () => {
     setModelshowfalse(false);
+    setDataloading(false);
     setErrors((prevErrors) => ({
       ...prevErrors,
       email: "อีเมลนี้ถูกใช้งานไปแล้ว กรุณาใช้อีเมลอื่น",
@@ -83,6 +85,7 @@ const FormPage = ({ onSubmitSuccess }) => {
 
   const hundlesuccess = () => {
     setModelshowfalse(false);
+    setDataloading(false);
     onSubmitSuccess();
   };
 
@@ -154,7 +157,8 @@ const FormPage = ({ onSubmitSuccess }) => {
       ) {
         setModelshowtrue(true);
       } else if (message === "อีเมลนี้ถูกใช้ไปแล้ว" && status === false) {
-        setModelshowfalse(true);
+        // setModelshowfalse(true);
+        setModelshowtrue(true);
       }
 
       if (response.status === 200) {
@@ -164,6 +168,7 @@ const FormPage = ({ onSubmitSuccess }) => {
         console.error("Registration failed");
       }
     } catch (error) {
+      setDataloading(false);
       console.error("Error during registration:", error);
     }
   };
@@ -177,6 +182,7 @@ const FormPage = ({ onSubmitSuccess }) => {
     }
     const { confirmPassword, ...dataToSubmit } = formData;
     console.log("Submitted Data:", dataToSubmit);
+    setDataloading(true);
     await setDataRegister();
   };
 
@@ -242,6 +248,11 @@ const FormPage = ({ onSubmitSuccess }) => {
             {errors.password && (
               <small className="text-danger">{errors.password}</small>
             )}
+            <div className="row">
+              <small>ต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว</small>
+              <small>ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว (@ _ )</small>
+              <small>ต้องมีตัวเลขอย่างน้อย 1 ตัว</small>
+            </div>
           </div>
           <div className="mb-3">
             <label className="form-label">Confirm Password</label>
@@ -303,9 +314,9 @@ const FormPage = ({ onSubmitSuccess }) => {
                 color: "white", // เปลี่ยนตัวอักษรเป็นสีขาว
                 border: "none", // เอาขอบออก
               }}
-              disabled={!isFormValid}
+              disabled={!isFormValid || Loading}
             >
-              ส่งข้อมูล
+              {!Loading ? "ส่งข้อมูล" : "loading"}
             </button>
           </div>
         </form>

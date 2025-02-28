@@ -243,6 +243,11 @@ const FormPageMB = ({ onSubmitSuccess }) => {
             {errors.password && (
               <small className="text-danger">{errors.password}</small>
             )}
+            <div className="row">
+              <small>ต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว</small>
+              <small>ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว (@ _ )</small>
+              <small>ต้องมีตัวเลขอย่างน้อย 1 ตัว</small>
+            </div>
           </div>
           <div className="mb-3">
             <label className="form-label">Confirm Password</label>
@@ -311,7 +316,7 @@ const FormPageMB = ({ onSubmitSuccess }) => {
           </div>
         </form>
       </div>
-      
+
       <div
         className={`modal fade ${modelshowtrue ? "show d-block" : ""}`}
         tabIndex="-1"

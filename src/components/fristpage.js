@@ -78,7 +78,7 @@ const Dashboard = () => {
               onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")} // Scale effect on hover
               onMouseLeave={(e) => (e.target.style.transform = "scale(1)")} // Reset scale on hover out
             >
-              360shopping
+              360healthyshop
             </button>
           </div>
         </div>
